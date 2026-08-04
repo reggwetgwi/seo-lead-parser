@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}{{ lead.title }} - SEO Lead Parser{% endblock %}
+
+{% block content %}
+<div class="lead-detail">
+    <div class="lead-header">
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">← Назад к списку</a>
+        <h2>{{ lead.title }}</h2>
+        <div class="lead-meta">
+            <span class="score-badge score-{{ lead.ai_score or 0 }}">Score: {{ lead.ai_score or '-' }}/10</span>
+            <span class="source-badge source-{{ lead.source }}">
+                {% if lead.source == 'hh' %}HH.ru
+                {% elif lead.source == 'fl' %}FL.ru
+                {% elif lead.source == 'kwork' %}Kwork
+                {% elif lead.source == 'avito' %}Avito
+                {% else %}{{ lead.source }}{% endif %}
+            </span>
+            <span class="status-badge status-{{ lead.status }}">
+                {% if lead.status == 'new' %}Новый
+                {% elif lead.status == 'notified' %}Отправлен
+                {% elif lead.status == 'in_progress' %}В работе
+                {% elif lead.status == 'closed' %}Закрыт
+                {% else %}{{ lead.status }}{% endif %}
+            </span>
+        </div>
+    </div>
+
+    <!-- AI Саммари -->
+    {% if lead.ai_summary %}
+    <div class="ai-summary">
+        <h3>📋 AI Анализ</h3>
+        <p class="summary-text">{{ lead.ai_summary }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Основная информация -->
+    <div class="lead-info">
+        <div class="info-row">
+            <div class="info-label">Услуга:</div>
+            <div class="info-value">{{ lead.recommended_service or 'Не определено' }}</div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Бюджет:</div>
+            <div class="info-value">{{ lead.budget or 'Не указан' }}</div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Город:</div>
+            <div class="info-value">{{ lead.city or 'Не указан' }}</div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Срочность:</div>
+            <div class="info-value">
+                {% if lead.urgency == 'high' %}🔥 Высокая
+                {% elif lead.urgency == 'medium' %}⚡ Средняя
+                {% elif lead.urgency == 'low' %}📌 Низкая
+                {% else %}Не определена{% endif %}
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Профиль клиента:</div>
+            <div class="info-value">{{ lead.client_profile or '-' }}</div>
+        </div>
+
+        {% if lead.contact_info %}
+        <div class="info-row">
+            <div class="info-label">Контакты:</div>
+            <div class="info-value">{{ lead.contact_info }}</div>
+        </div>
+        {% endif %}
+
+        <div class="info-row">
+            <div class="info-label">Дата публикации:</div>
+            <div class="info-value">{{ lead.published_at.strftime('%d.%m.%Y %H:%M') if lead.published_at else '-' }}</div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Спарсено:</div>
+            <div class="info-value">{{ lead.parsed_at.strftime('%d.%m.%Y %H:%M') if lead.parsed_at else '-' }}</div>
+        </div>
+
+        {% if tags %}
+        <div class="info-row">
+            <div class="info-label">Теги:</div>
+            <div class="info-value">
+                {% for tag in tags %}
+                    <span class="tag">{{ tag }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Описание -->
+    <div class="lead-description">
+        <h3>Описание</h3>
+        <p>{{ lead.description }}</p>
+    </div>
+
+    <!-- Действия -->
+    <div class="lead-actions">
+        <h3>Действия</h3>
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="updateStatus('in_progress')">Взять в работу</button>
+            <button class="btn btn-success" onclick="updateStatus('closed')">Закрыть</button>
+            <a href="{{ lead.url }}" target="_blank" class="btn btn-secondary">Открыть оригинал →</a>
+        </div>
+    </div>
+
+    <!-- Заметка менеджера -->
+    <div class="manager-note">
+        <h3>Заметка менеджера</h3>
+        <textarea id="note-textarea" rows="4" placeholder="Добавьте заметку...">{{ lead.manager_note or '' }}</textarea>
+        <button class="btn btn-primary" onclick="saveNote()">Сохранить заметку</button>
+    </div>
+</div>
+
+<script>
+const leadId = {{ lead.id }};
+
+function updateStatus(newStatus) {
+    fetch(`/lead/${leadId}/status`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: newStatus })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Статус обновлен');
+            location.reload();
+        } else {
+            alert('Ошибка: ' + data.error);
+        }
+    })
+    .catch(error => {
+        alert('Ошибка: ' + error);
+    });
+}
+
+function saveNote() {
+    const note = document.getElementById('note-textarea').value;
+
+    fetch(`/lead/${leadId}/note`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ note: note })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Заметка сохранена');
+        } else {
+            alert('Ошибка: ' + data.error);
+        }
+    })
+    .catch(error => {
+        alert('Ошибка: ' + error);
+    });
+}
+</script>
+{% endblock %}

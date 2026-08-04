@@ -1,0 +1,523 @@
+/* Общие стили */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Навигация */
+.navbar {
+    background-color: #2c3e50;
+    color: white;
+    padding: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-menu a {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.nav-menu a:hover,
+.nav-menu a.active {
+    background-color: #34495e;
+}
+
+/* Основной контент */
+main {
+    padding: 2rem 0;
+    min-height: calc(100vh - 200px);
+}
+
+.page-header {
+    margin-bottom: 2rem;
+}
+
+.page-header h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: #666;
+}
+
+/* Фильтры */
+.filters {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.filter-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-group label {
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.filter-group select,
+.filter-group input {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+/* Кнопки */
+.btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s;
+}
+
+.btn-primary {
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+}
+
+.btn-secondary {
+    background-color: #95a5a6;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #7f8c8d;
+}
+
+.btn-success {
+    background-color: #27ae60;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #229954;
+}
+
+/* Таблица */
+.table-container {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.leads-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.leads-table thead {
+    background-color: #34495e;
+    color: white;
+}
+
+.leads-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+.leads-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.lead-row {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.lead-row:hover {
+    background-color: #f8f9fa;
+}
+
+/* Цветовая маркировка по score */
+.lead-row.score-9,
+.lead-row.score-10 {
+    background-color: #ffe6e6;
+}
+
+.lead-row.score-7,
+.lead-row.score-8 {
+    background-color: #fff9e6;
+}
+
+.lead-row.score-5,
+.lead-row.score-6 {
+    background-color: white;
+}
+
+.lead-row.score-1,
+.lead-row.score-2,
+.lead-row.score-3,
+.lead-row.score-4 {
+    background-color: #f5f5f5;
+}
+
+/* Бейджи */
+.score-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.score-badge.score-9,
+.score-badge.score-10 {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.score-badge.score-7,
+.score-badge.score-8 {
+    background-color: #f39c12;
+    color: white;
+}
+
+.score-badge.score-5,
+.score-badge.score-6 {
+    background-color: #95a5a6;
+    color: white;
+}
+
+.score-badge.score-none {
+    background-color: #ecf0f1;
+    color: #7f8c8d;
+}
+
+.source-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.source-badge.source-hh {
+    background-color: #d62027;
+    color: white;
+}
+
+.source-badge.source-fl {
+    background-color: #ff6600;
+    color: white;
+}
+
+.source-badge.source-kwork {
+    background-color: #5cb85c;
+    color: white;
+}
+
+.source-badge.source-workspace {
+    background-color: #9b59b6;
+    color: white;
+}
+
+.source-badge.source-avito {
+    background-color: #00aaff;
+    color: white;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.status-badge.status-new {
+    background-color: #3498db;
+    color: white;
+}
+
+.status-badge.status-notified {
+    background-color: #9b59b6;
+    color: white;
+}
+
+.status-badge.status-in_progress {
+    background-color: #f39c12;
+    color: white;
+}
+
+.status-badge.status-closed {
+    background-color: #95a5a6;
+    color: white;
+}
+
+/* Пагинация */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.page-info {
+    font-weight: 500;
+}
+
+/* Детальная страница лида */
+.lead-detail {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.lead-header {
+    margin-bottom: 2rem;
+}
+
+.lead-header h2 {
+    margin: 1rem 0;
+}
+
+.lead-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.ai-summary {
+    background-color: #e8f4f8;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    border-left: 4px solid #3498db;
+}
+
+.ai-summary h3 {
+    margin-bottom: 1rem;
+}
+
+.summary-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.lead-info {
+    margin-bottom: 2rem;
+}
+
+.info-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #555;
+}
+
+.info-value {
+    color: #333;
+}
+
+.tag {
+    display: inline-block;
+    background-color: #ecf0f1;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    margin-right: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.lead-description {
+    margin-bottom: 2rem;
+}
+
+.lead-description h3 {
+    margin-bottom: 1rem;
+}
+
+.lead-description p {
+    line-height: 1.8;
+    white-space: pre-wrap;
+}
+
+.lead-actions,
+.manager-note {
+    margin-bottom: 2rem;
+}
+
+.lead-actions h3,
+.manager-note h3 {
+    margin-bottom: 1rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.manager-note textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    resize: vertical;
+}
+
+/* Статистика */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.stat-card h3 {
+    margin-bottom: 1rem;
+    color: #2c3e50;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.stat-label {
+    color: #555;
+}
+
+.stat-value {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.stat-value.hot {
+    color: #e74c3c;
+}
+
+.stat-value.warm {
+    color: #f39c12;
+}
+
+.stats-footer {
+    text-align: center;
+    color: #666;
+}
+
+.stats-footer p {
+    margin-bottom: 1rem;
+}
+
+/* Нет данных */
+.no-data {
+    text-align: center;
+    padding: 3rem;
+    color: #999;
+}
+
+/* Footer */
+footer {
+    background-color: #2c3e50;
+    color: white;
+    padding: 2rem 0;
+    text-align: center;
+    margin-top: 4rem;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .filter-row {
+        flex-direction: column;
+    }
+
+    .filter-group {
+        width: 100%;
+    }
+
+    .leads-table {
+        font-size: 0.9rem;
+    }
+
+    .leads-table th,
+    .leads-table td {
+        padding: 0.5rem;
+    }
+
+    .info-row {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}

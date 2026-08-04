@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Статистика - SEO Lead Parser{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Статистика</h2>
+</div>
+
+<div class="stats-grid">
+    <!-- Общая статистика -->
+    <div class="stat-card">
+        <h3>Общая статистика</h3>
+        <div class="stat-item">
+            <span class="stat-label">Всего лидов:</span>
+            <span class="stat-value">{{ stats.total }}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">За последние 24 часа:</span>
+            <span class="stat-value">{{ stats.recent_24h }}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">🔥 Горячих (9-10):</span>
+            <span class="stat-value hot">{{ stats.hot_count }}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">⚡ Тёплых (7-8):</span>
+            <span class="stat-value warm">{{ stats.warm_count }}</span>
+        </div>
+    </div>
+
+    <!-- По источникам -->
+    <div class="stat-card">
+        <h3>По источникам</h3>
+        {% for source, count in stats.by_source.items() %}
+        <div class="stat-item">
+            <span class="stat-label">
+                {% if source == 'hh' %}HH.ru
+                {% elif source == 'fl' %}FL.ru
+                {% elif source == 'kwork' %}Kwork
+                {% elif source == 'avito' %}Avito
+                {% else %}{{ source }}{% endif %}:
+            </span>
+            <span class="stat-value">{{ count }}</span>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- По статусам -->
+    <div class="stat-card">
+        <h3>По статусам</h3>
+        {% for status, count in stats.by_status.items() %}
+        <div class="stat-item">
+            <span class="stat-label">
+                {% if status == 'new' %}Новые
+                {% elif status == 'notified' %}Отправлены
+                {% elif status == 'in_progress' %}В работе
+                {% elif status == 'closed' %}Закрыты
+                {% else %}{{ status }}{% endif %}:
+            </span>
+            <span class="stat-value">{{ count }}</span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="stats-footer">
+    <p>Обновлено: {{ now.strftime('%d.%m.%Y %H:%M:%S') if now else '' }}</p>
+    <a href="{{ url_for('stats') }}" class="btn btn-primary">Обновить</a>
+</div>
+
+{% endblock %}

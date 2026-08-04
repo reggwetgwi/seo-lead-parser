@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Лиды - SEO Lead Parser{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Лиды</h2>
+    <p class="subtitle">Всего найдено: {{ total_count }}</p>
+</div>
+
+<!-- Фильтры -->
+<div class="filters">
+    <form method="get" action="{{ url_for('index') }}">
+        <div class="filter-row">
+            <div class="filter-group">
+                <label>Источник:</label>
+                <select name="source">
+                    <option value="">Все</option>
+                    <option value="hh" {% if filters.source == 'hh' %}selected{% endif %}>HH.ru</option>
+                    <option value="fl" {% if filters.source == 'fl' %}selected{% endif %}>FL.ru</option>
+                    <option value="kwork" {% if filters.source == 'kwork' %}selected{% endif %}>Kwork</option>
+                    <option value="workspace" {% if filters.source == 'workspace' %}selected{% endif %}>Workspace</option>
+                    <option value="avito" {% if filters.source == 'avito' %}selected{% endif %}>Avito</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Статус:</label>
+                <select name="status">
+                    <option value="">Все</option>
+                    <option value="new" {% if filters.status == 'new' %}selected{% endif %}>Новый</option>
+                    <option value="notified" {% if filters.status == 'notified' %}selected{% endif %}>Отправлен</option>
+                    <option value="in_progress" {% if filters.status == 'in_progress' %}selected{% endif %}>В работе</option>
+                    <option value="closed" {% if filters.status == 'closed' %}selected{% endif %}>Закрыт</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Срочность:</label>
+                <select name="urgency">
+                    <option value="">Все</option>
+                    <option value="high" {% if filters.urgency == 'high' %}selected{% endif %}>Высокая</option>
+                    <option value="medium" {% if filters.urgency == 'medium' %}selected{% endif %}>Средняя</option>
+                    <option value="low" {% if filters.urgency == 'low' %}selected{% endif %}>Низкая</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Мин. score:</label>
+                <input type="number" name="min_score" min="1" max="10" value="{{ filters.min_score or 1 }}">
+            </div>
+
+            <div class="filter-group">
+                <button type="submit" class="btn btn-primary">Применить</button>
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">Сбросить</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Таблица лидов -->
+<div class="table-container">
+    <table class="leads-table">
+        <thead>
+            <tr>
+                <th>Score</th>
+                <th>Заголовок</th>
+                <th>Услуга</th>
+                <th>Бюджет</th>
+                <th>Город</th>
+                <th>Источник</th>
+                <th>Срочность</th>
+                <th>Дата</th>
+                <th>Статус</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lead in leads %}
+            <tr class="lead-row score-{{ lead.ai_score or 0 }}" onclick="window.location='{{ url_for('lead_detail', lead_id=lead.id) }}'">
+                <td class="score-cell">
+                    {% if lead.ai_score %}
+                        <span class="score-badge score-{{ lead.ai_score }}">{{ lead.ai_score }}</span>
+                    {% else %}
+                        <span class="score-badge score-none">-</span>
+                    {% endif %}
+                </td>
+                <td class="title-cell">{{ lead.title[:80] }}{% if lead.title|length > 80 %}...{% endif %}</td>
+                <td>{{ lead.recommended_service or '-' }}</td>
+                <td>{{ lead.budget or '-' }}</td>
+                <td>{{ lead.city or '-' }}</td>
+                <td>
+                    <span class="source-badge source-{{ lead.source }}">
+                        {% if lead.source == 'hh' %}HH.ru
+                        {% elif lead.source == 'fl' %}FL.ru
+                        {% elif lead.source == 'kwork' %}Kwork
+                        {% elif lead.source == 'workspace' %}Workspace
+                        {% elif lead.source == 'avito' %}Avito
+                        {% else %}{{ lead.source }}{% endif %}
+                    </span>
+                </td>
+                <td>
+                    {% if lead.urgency == 'high' %}🔥 Высокая
+                    {% elif lead.urgency == 'medium' %}⚡ Средняя
+                    {% elif lead.urgency == 'low' %}📌 Низкая
+                    {% else %}-{% endif %}
+                </td>
+                <td>{{ lead.published_at.strftime('%d.%m.%Y %H:%M') if lead.published_at else '-' }}</td>
+                <td>
+                    <span class="status-badge status-{{ lead.status }}">
+                        {% if lead.status == 'new' %}Новый
+                        {% elif lead.status == 'notified' %}Отправлен
+                        {% elif lead.status == 'in_progress' %}В работе
+                        {% elif lead.status == 'closed' %}Закрыт
+                        {% else %}{{ lead.status }}{% endif %}
+                    </span>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="9" class="no-data">Лиды не найдены</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Пагинация -->
+{% if total_pages > 1 %}
+<div class="pagination">
+    {% if page > 1 %}
+        <a href="{{ url_for('index', page=page-1, source=filters.source, status=filters.status, urgency=filters.urgency, min_score=filters.min_score, date_from=filters.date_from, date_to=filters.date_to) }}" class="btn btn-secondary">← Назад</a>
+    {% endif %}
+
+    <span class="page-info">Страница {{ page }} из {{ total_pages }}</span>
+
+    {% if page < total_pages %}
+        <a href="{{ url_for('index', page=page+1, source=filters.source, status=filters.status, urgency=filters.urgency, min_score=filters.min_score, date_from=filters.date_from, date_to=filters.date_to) }}" class="btn btn-secondary">Вперед →</a>
+    {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}
